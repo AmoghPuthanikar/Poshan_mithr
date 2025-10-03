@@ -1,0 +1,79 @@
+{% extends "base.html" %} {% block title %}Admin Dashboard{% endblock %} {%
+block content %}
+<div class="container-fluid">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h2>📊 District CEO Dashboard</h2>
+      <p class="text-muted">Overview of nutrition status across all schools</p>
+    </div>
+  </div>
+
+  <div class="row mb-4">
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-primary text-white h-100">
+        <div class="card-body text-center">
+          <h2 class="mb-0">{{ total_kids }}</h2>
+          <p class="mb-0">👶 Total Children</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-success text-white h-100">
+        <div class="card-body text-center">
+          <h2 class="mb-0">{{ total_schools }}</h2>
+          <p class="mb-0">🏫 Schools</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-warning text-white h-100">
+        <div class="card-body text-center">
+          {% set nutrition_data_dict = nutrition_stats | fromjson %}
+          <h2 class="mb-0">{{ nutrition_data_dict.get('underweight', 0) }}</h2>
+          <p class="mb-0">⚠️ Underweight</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3 col-sm-6 mb-3">
+      <div class="card bg-info text-white h-100">
+        <div class="card-body text-center">
+          <h2 class="mb-0">{{ nutrition_data_dict.get('healthy', 0) }}</h2>
+          <p class="mb-0">💚 Healthy</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header">
+          <h5>📈 Nutrition Status Distribution</h5>
+        </div>
+        <div class="card-body">
+          {% if total_kids > 0 %} {% set nutrition_data_dict = nutrition_stats |
+          fromjson %} {% for status, count in nutrition_data_dict.items() %}
+          <div class="mb-2">
+            <div class="d-flex justify-content-between mb-1">
+              <span>{{ status.title() }}</span>
+              <span>{{ (count / total_kids * 100) | round(1) }}%</span>
+            </div>
+            <div class="progress">
+              <div
+                class="progress-bar bg-{% if status == 'healthy' %}success{% elif status == 'underweight' %}warning{% else %}danger{% endif %}"
+                style="width: {{ (count / total_kids * 100) | round(1) }}%;"
+              ></div>
+            </div>
+          </div>
+          {% endfor %} {% else %}
+          <p class="text-muted">No nutrition data available yet</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
