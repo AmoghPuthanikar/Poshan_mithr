@@ -1,9 +1,3 @@
-Here’s a clean, well-structured version of your \*\*README.md\*\*, formatted in professional GitHub style 👇
-
-
-
----
-
 
 
 \# 🍎 Nutrition Management System
