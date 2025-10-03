@@ -1,484 +1,199 @@
-Here’s a clean, well-structured version of your \*\*README.md\*\*, formatted in professional GitHub style 👇
+🍎 Nutrition Management System
 
+A comprehensive school nutrition management platform built with FastAPI and SQLAlchemy to track student health, calculate BMI, detect nutritional deficiencies, and generate personalized Indian diet recommendations.
 
+✨ Features
+🧑‍⚖️ Role-Based Access Control
 
----
+Admin (District CEO): Monitor district-wide nutrition analytics
 
+Authority (Headmaster): Manage classrooms and student records
 
+Parent: Track child’s health and dietary recommendations
 
-\# 🍎 Nutrition Management System
+👩‍🎓 Student Management
 
+Add students with automatic parent account creation
 
+Organize students into classrooms
 
-A comprehensive school nutrition management system built with \*\*FastAPI\*\* and \*\*SQLAlchemy\*\* to track student health, calculate BMI, and generate personalized Indian diet recommendations.
+Track dietary preferences (Veg / Non-Veg)
 
+🥗 Nutrition Calculator
 
+BMI calculation with age-appropriate percentiles
 
----
+Status classification: Underweight, Healthy, Overweight, Obese
 
+Detect common nutritional deficiencies
 
+Generate personalized Indian diet plans
 
-\## ✨ Features
+👨‍👩‍👧 Parent Portal
 
+View child’s health dashboard
 
+Access diet recommendations
 
-\### 🧑‍⚖️ Role-Based Access Control
+Monitor growth and nutrition progress
 
+🚀 Tech Stack
 
+Backend: FastAPI (Python)
 
-\* \*\*Admin (District CEO):\*\* View district-wide analytics
+Database: SQLAlchemy with SQLite (PostgreSQL supported)
 
-\* \*\*Authority (Headmaster):\*\* Manage students and classrooms
+Frontend: Bootstrap 5, Jinja2 Templates
 
-\* \*\*Parent:\*\* Monitor child health and nutrition progress
+Authentication: JWT with bcrypt password hashing
 
+📋 Prerequisites
 
+Python 3.8+
 
-\### 👩‍🎓 Student Management
+pip (Python package manager)
 
+⚙️ Installation
 
+Clone the repository
 
-\* Add students with automatic parent account creation
+git clone <your-repo-url>
+cd nutrition_mvp
 
-\* Organize students into classrooms
 
-\* Track dietary preferences (Veg/Non-Veg)
+Create a virtual environment
 
+python -m venv venv
 
 
-\### 🥗 Nutrition Calculator
+Activate the virtual environment
 
+Windows:
 
+venv\Scripts\activate
 
-\* BMI calculation with age-appropriate percentiles
 
-\* Status classification: Underweight, Healthy, Overweight, Obese
+Mac/Linux:
 
-\* Nutritional deficiency identification
+source venv/bin/activate
 
-\* Personalized Indian diet recommendations
 
+Install dependencies
 
+pip install -r requirements.txt
 
-\### 👨‍👩‍👧 Parent Portal
 
+Seed the database with sample data
 
+python -m app.seed_data
 
-\* View child’s health dashboard
 
-\* Access diet recommendations
+Run the application
 
-\* Monitor growth progress
+python -m app.main
 
 
+Access the web app
 
----
+http://localhost:8000
 
-
-
-\## 🚀 Tech Stack
-
-
-
-\* \*\*Backend:\*\* FastAPI (Python)
-
-\* \*\*Database:\*\* SQLAlchemy with SQLite
-
-\* \*\*Frontend:\*\* Bootstrap 5, Jinja2 Templates
-
-\* \*\*Authentication:\*\* JWT with bcrypt password hashing
-
-
-
----
-
-
-
-\## 📋 Prerequisites
-
-
-
-\* Python 3.8+
-
-\* pip package manager
-
-
-
----
-
-
-
-\## ⚙️ Installation
-
-
-
-1\. \*\*Clone the repository\*\*
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  git clone <your-repo-url>
-
-&nbsp;  cd nutrition\_mvp
-
-&nbsp;  ```
-
-
-
-2\. \*\*Create virtual environment\*\*
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  python -m venv venv
-
-&nbsp;  ```
-
-
-
-3\. \*\*Activate virtual environment\*\*
-
-
-
-&nbsp;  \* \*\*Windows:\*\*
-
-
-
-&nbsp;    ```bash
-
-&nbsp;    venv\\Scripts\\activate
-
-&nbsp;    ```
-
-&nbsp;  \* \*\*Mac/Linux:\*\*
-
-
-
-&nbsp;    ```bash
-
-&nbsp;    source venv/bin/activate
-
-&nbsp;    ```
-
-
-
-4\. \*\*Install dependencies\*\*
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  pip install -r requirements.txt
-
-&nbsp;  ```
-
-
-
-5\. \*\*Create database with seed data\*\*
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  python -m app.seed\_data
-
-&nbsp;  ```
-
-
-
-6\. \*\*Run the application\*\*
-
-
-
-&nbsp;  ```bash
-
-&nbsp;  python -m app.main
-
-&nbsp;  ```
-
-
-
-7\. \*\*Open in browser\*\*
-
-
-
-&nbsp;  ```
-
-&nbsp;  http://localhost:8000
-
-&nbsp;  ```
-
-
-
----
-
-
-
-\## 🔐 Demo Login Credentials
-
-
-
-| Role       | Username  | Password   |
-
-| ---------- | --------- | ---------- |
-
-| Admin      | `admin`   | `admin123` |
-
-| Headmaster | `head1`   | `pass123`  |
-
-| Parent     | `parent1` | `pass123`  |
-
-
-
----
-
-
-
-\## 📂 Project Structure
-
-
-
-```
-
-nutrition\_mvp/
-
+🔐 Demo Login Credentials
+Role	Username	Password
+Admin	admin	admin123
+Headmaster	head1	pass123
+Parent	parent1	pass123
+📂 Project Structure
+nutrition_mvp/
 ├── app/
-
 │   ├── static/
-
 │   │   ├── css/
-
 │   │   │   └── style.css
-
 │   │   └── js/
-
 │   │       └── main.js
-
 │   ├── templates/
-
 │   │   ├── base.html
-
 │   │   ├── login.html
-
-│   │   ├── admin\_dashboard.html
-
-│   │   ├── authority\_dashboard.html
-
-│   │   ├── parent\_dashboard.html
-
-│   │   ├── create\_kid.html
-
-│   │   ├── create\_classroom.html
-
-│   │   ├── nutrition\_calculator.html
-
-│   │   └── nutrition\_results.html
-
-│   ├── \_\_init\_\_.py
-
+│   │   ├── admin_dashboard.html
+│   │   ├── authority_dashboard.html
+│   │   ├── parent_dashboard.html
+│   │   ├── create_kid.html
+│   │   ├── create_classroom.html
+│   │   ├── nutrition_calculator.html
+│   │   └── nutrition_results.html
+│   ├── __init__.py
 │   ├── main.py
-
 │   ├── models.py
-
 │   ├── database.py
-
 │   ├── auth.py
-
-│   ├── nutrition\_calculator.py
-
-│   └── seed\_data.py
-
+│   ├── nutrition_calculator.py
+│   └── seed_data.py
 ├── venv/
-
 ├── .gitignore
-
 ├── requirements.txt
-
 └── README.md
 
-```
+🎯 Usage
+👨‍🏫 Headmaster
 
+Log in with headmaster credentials
 
+Create classrooms and add students
 
----
+Run the nutrition calculator for assessments
 
+Generate personalized diet recommendations
 
+👩‍👩‍👧 Parent
 
-\## 🎯 Usage
+Log in with parent credentials
 
+View child’s health dashboard
 
+Monitor BMI and nutrition status
 
-\### 👨‍🏫 For Headmaster
+Follow suggested meal plans
 
+🏢 Admin
 
+Log in as admin
 
-1\. Login with headmaster credentials
+Access district-level analytics
 
-2\. Create classrooms and add students
+Track school nutrition performance trends
 
-3\. Use the nutrition calculator to assess students
+🔧 Configuration
+Change JWT Secret Key
 
-4\. Generate personalized diet recommendations
+Edit app/auth.py:
 
+SECRET_KEY = "your-secret-key-here"
 
+Switch to PostgreSQL
 
-\### 👩‍👩‍👧 For Parents
+Edit app/database.py:
 
+SQLALCHEMY_DATABASE_URL = "postgresql://user:password@localhost/dbname"
 
+📊 Detailed Features
+🧮 BMI Calculator
 
-1\. Login with provided credentials
+Calculates BMI percentiles by age
 
-2\. View your child's health dashboard
+Classifies status: Underweight, Healthy, Overweight, Obese
 
-3\. Track BMI and nutrition status
+Detects nutritional deficiencies (Iron, Calcium, Protein, etc.)
 
-4\. Follow suggested diet plans
+🍽️ Personalized Diet Plans
 
+Vegetarian and Non-Vegetarian meal options
 
+Traditional Indian diet plans
 
-\### 🏢 For Admin
+Status-specific nutrition advice
 
+Meal suggestions for Breakfast, Lunch, Dinner, and Snacks
 
-
-1\. Login with admin credentials
-
-2\. Monitor district-wide statistics
-
-3\. Track school performance and nutrition trends
-
-
-
----
-
-
-
-\## 🔧 Configuration
-
-
-
-\* \*\*Change JWT Secret Key\*\*
-
-&nbsp; Edit `app/auth.py`:
-
-
-
-&nbsp; ```python
-
-&nbsp; SECRET\_KEY = "your-secret-key-here"
-
-&nbsp; ```
-
-
-
-\* \*\*Use PostgreSQL instead of SQLite\*\*
-
-&nbsp; Update `app/database.py`:
-
-
-
-&nbsp; ```python
-
-&nbsp; SQLALCHEMY\_DATABASE\_URL = "postgresql://user:password@localhost/dbname"
-
-&nbsp; ```
-
-
-
----
-
-
-
-\## 📊 Features in Detail
-
-
-
-\### 🧮 BMI Calculator
-
-
-
-\* Age-appropriate BMI percentile calculation
-
-\* Status classification: Underweight, Healthy, Overweight, Obese
-
-\* Nutritional deficiency detection (Iron, Calcium, Protein, etc.)
-
-
-
-\### 🍽️ Diet Recommendations
-
-
-
-\* Vegetarian and Non-Vegetarian options
-
-\* Traditional Indian meal plans
-
-\* Status-specific advice based on BMI
-
-\* Meal suggestions for Breakfast, Lunch, Dinner, and Snacks
-
-
-
----
-
-
-
-\## 🤝 Contributing
-
-
+🤝 Contributing
 
 Contributions are welcome!
-
-Please fork the repository and submit a Pull Request with your changes.
-
-
-
----
-
-
-
-\## 📄 License
-
-
-
-This project is open-source and available under the \*\*MIT License\*\*.
-
-
-
----
-
-
-
-\## 👨‍💻 Author
-
-
-
-Developed to improve school nutrition management and student health monitoring.
-
-
-
----
-
-
-
-\## 🙏 Acknowledgments
-
-
-
-\* \[Bootstrap 5](https://getbootstrap.com/) – UI components
-
-\* \[FastAPI](https://fastapi.tiangolo.com/) – Backend framework
-
-\* \[SQLAlchemy](https://www.sqlalchemy.org/) – Database ORM
-
-
-
----
-
-
-
-Would you like me to rewrite this README in a \*\*more professional, SaaS-style tone\*\* (like a real GitHub project ready for public release), or keep it \*\*simple and student-project friendly\*\*?
-
-
-
+Fork the repository, create a new branch, make changes, and submit a Pull Request.
