@@ -52,11 +52,23 @@ async def authority_dashboard(request: Request, db: Session = Depends(get_db)):
         else 0
     )
 
+    # Count assessed kids (kids with nutrition reports)
+    assessed_kids = 0
+    if classroom_ids:
+        kid_ids = [kid.id for classroom in classrooms for kid in classroom.kids]
+        if kid_ids:
+            assessed_kids = (
+                db.query(Kid)
+                .filter(Kid.id.in_(kid_ids), Kid.nutrition_reports.any())
+                .count()
+            )
+
     context = {
         "request": request,
         "current_user": current_user,
         "classrooms": classrooms,
         "total_kids": total_kids,
+        "assessed_kids": assessed_kids,
     }
 
     return templates.TemplateResponse("authority_dashboard.html", context)

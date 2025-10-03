@@ -1,5 +1,5 @@
-{% extends "base.html" %} {% block title %}Admin Dashboard{% endblock %} {%
-block content %}
+{% extends "base.html" %} {% block title %}Admin Dashboard - Nutrition
+Management{% endblock %} {% block content %}
 <div class="container-fluid">
   <div class="row mb-4">
     <div class="col-12">
@@ -8,6 +8,7 @@ block content %}
     </div>
   </div>
 
+  <!-- Statistics Cards -->
   <div class="row mb-4">
     <div class="col-md-3 col-sm-6 mb-3">
       <div class="card bg-primary text-white h-100">
@@ -30,8 +31,7 @@ block content %}
     <div class="col-md-3 col-sm-6 mb-3">
       <div class="card bg-warning text-white h-100">
         <div class="card-body text-center">
-          {% set nutrition_data_dict = nutrition_stats | fromjson %}
-          <h2 class="mb-0">{{ nutrition_data_dict.get('underweight', 0) }}</h2>
+          <h2 class="mb-0">{{ nutrition_stats.get('underweight', 0) }}</h2>
           <p class="mb-0">⚠️ Underweight</p>
         </div>
       </div>
@@ -40,37 +40,163 @@ block content %}
     <div class="col-md-3 col-sm-6 mb-3">
       <div class="card bg-info text-white h-100">
         <div class="card-body text-center">
-          <h2 class="mb-0">{{ nutrition_data_dict.get('healthy', 0) }}</h2>
+          <h2 class="mb-0">{{ nutrition_stats.get('healthy', 0) }}</h2>
           <p class="mb-0">💚 Healthy</p>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Nutrition Status Distribution -->
   <div class="row">
     <div class="col-12">
       <div class="card">
         <div class="card-header">
-          <h5>📈 Nutrition Status Distribution</h5>
+          <h5 class="mb-0">📈 Nutrition Status Distribution</h5>
         </div>
         <div class="card-body">
-          {% if total_kids > 0 %} {% set nutrition_data_dict = nutrition_stats |
-          fromjson %} {% for status, count in nutrition_data_dict.items() %}
-          <div class="mb-2">
+          {% if total_kids > 0 %}
+
+          <!-- Underweight -->
+          {% set underweight_count = nutrition_stats.get('underweight', 0) %} {%
+          set underweight_percent = ((underweight_count / total_kids) * 100) |
+          round %}
+          <div class="mb-3">
             <div class="d-flex justify-content-between mb-1">
-              <span>{{ status.title() }}</span>
-              <span>{{ (count / total_kids * 100) | round(1) }}%</span>
+              <strong>Underweight</strong>
+              <span
+                >{{ underweight_count }} students ({{ ((underweight_count /
+                total_kids) * 100) | round(1) }}%)</span
+              >
             </div>
             <div class="progress">
               <div
-                class="progress-bar bg-{% if status == 'healthy' %}success{% elif status == 'underweight' %}warning{% else %}danger{% endif %}"
-                style="width: {{ (count / total_kids * 100) | round(1) }}%;"
+                class="progress-bar bg-warning"
+                style="width: {{ underweight_percent }}%"
               ></div>
             </div>
           </div>
-          {% endfor %} {% else %}
-          <p class="text-muted">No nutrition data available yet</p>
+
+          <!-- Healthy -->
+          {% set healthy_count = nutrition_stats.get('healthy', 0) %} {% set
+          healthy_percent = ((healthy_count / total_kids) * 100) | round %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <strong>Healthy</strong>
+              <span
+                >{{ healthy_count }} students ({{ ((healthy_count / total_kids)
+                * 100) | round(1) }}%)</span
+              >
+            </div>
+            <div class="progress">
+              <div
+                class="progress-bar bg-success"
+                style="width: {{ healthy_percent }}%"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Overweight -->
+          {% set overweight_count = nutrition_stats.get('overweight', 0) %} {%
+          set overweight_percent = ((overweight_count / total_kids) * 100) |
+          round %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <strong>Overweight</strong>
+              <span
+                >{{ overweight_count }} students ({{ ((overweight_count /
+                total_kids) * 100) | round(1) }}%)</span
+              >
+            </div>
+            <div class="progress">
+              <div
+                class="progress-bar bg-info"
+                style="width: {{ overweight_percent }}%"
+              ></div>
+            </div>
+          </div>
+
+          <!-- Obese -->
+          {% set obese_count = nutrition_stats.get('obese', 0) %} {% set
+          obese_percent = ((obese_count / total_kids) * 100) | round %}
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1">
+              <strong>Obese</strong>
+              <span
+                >{{ obese_count }} students ({{ ((obese_count / total_kids) *
+                100) | round(1) }}%)</span
+              >
+            </div>
+            <div class="progress">
+              <div
+                class="progress-bar bg-danger"
+                style="width: {{ obese_percent }}%"
+              ></div>
+            </div>
+          </div>
+
+          {% else %}
+          <div class="alert alert-info">
+            <strong>ℹ️ No Data Yet</strong>
+            <p class="mb-0">
+              No students enrolled yet. Data will appear once students are added
+              and assessed.
+            </p>
+          </div>
           {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Additional Info Cards -->
+  <div class="row mt-4">
+    <div class="col-md-6 mb-3">
+      <div class="card border-primary">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">📌 District Overview</h5>
+        </div>
+        <div class="card-body">
+          <table class="table table-sm mb-0">
+            <tbody>
+              <tr>
+                <td><strong>Total Schools:</strong></td>
+                <td>{{ total_schools }}</td>
+              </tr>
+              <tr>
+                <td><strong>Total Students:</strong></td>
+                <td>{{ total_kids }}</td>
+              </tr>
+              <tr>
+                <td><strong>Avg Students/School:</strong></td>
+                <td>
+                  {{ (total_kids / total_schools) | round(1) if total_schools >
+                  0 else 0 }}
+                </td>
+              </tr>
+              <tr>
+                <td><strong>System Status:</strong></td>
+                <td><span class="badge bg-success">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <div class="card border-success">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">ℹ️ Admin Features</h5>
+        </div>
+        <div class="card-body">
+          <ul class="mb-0">
+            <li>Monitor district-wide health metrics</li>
+            <li>Track nutrition trends across schools</li>
+            <li>Identify schools needing intervention</li>
+            <li>View comprehensive health reports</li>
+            <li>Generate district analytics</li>
+          </ul>
         </div>
       </div>
     </div>
