@@ -83,3 +83,24 @@ def init_db():
         raise
     finally:
         db.close()
+# Auto-initialize database on import
+import atexit
+
+def ensure_db_initialized():
+    """Ensure database is initialized - called on every cold start"""
+    try:
+        # Check if tables exist
+        from app.models import User
+        db = SessionLocal()
+        try:
+            db.query(User).first()
+            db.close()
+        except:
+            # Tables don't exist, initialize
+            db.close()
+            init_db()
+    except Exception as e:
+        print(f"Database check error: {e}")
+
+# Run on module import (every serverless function cold start)
+ensure_db_initialized()
