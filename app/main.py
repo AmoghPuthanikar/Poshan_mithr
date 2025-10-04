@@ -39,12 +39,14 @@ if os.path.exists(static_path):
 @app.on_event("startup")
 async def startup_event():
     try:
-        # Create tables first
-        Base.metadata.create_all(bind=engine)
-        # Then initialize with seed data
+        from app.database import init_db
+        print("🚀 Starting database initialization...")
         init_db()
+        print("✅ Database initialized successfully")
     except Exception as e:
-        print(f"Startup initialization error: {e}")
+        print(f"⚠️ Database initialization error: {e}")
+        import traceback
+        traceback.print_exc()
 
 
 # Import routers
