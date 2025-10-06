@@ -204,7 +204,6 @@ Management{% endblock %} {% block content %}
                       total_kids * 100) if total_kids > 0 else 0 %}
                       <div
                         class="progress-bar bg-primary"
-                        style="width: {{ classroom_percent | round }}%"
                       ></div>
                     </div>
                   </div>
@@ -229,7 +228,6 @@ Management{% endblock %} {% block content %}
                       100) if total_kids > 0 else 0 %}
                       <div
                         class="progress-bar bg-success"
-                        style="width: {{ assessed_percent | round }}%"
                       ></div>
                     </div>
                   </div>
@@ -243,7 +241,6 @@ Management{% endblock %} {% block content %}
                       total_kids * 100) if total_kids > 0 else 0 %}
                       <div
                         class="progress-bar bg-warning"
-                        style="width: {{ pending_percent | round }}%"
                       ></div>
                     </div>
                   </div>
