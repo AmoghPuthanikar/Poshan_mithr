@@ -7,9 +7,6 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import os
 
-from app.database import engine, init_db
-from app.models import Base
-
 # Initialize FastAPI app
 app = FastAPI(
     title="Nutrition Management System",
@@ -17,7 +14,7 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS middleware for Vercel
+# CORS middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -33,21 +30,6 @@ if os.path.exists(static_path):
         app.mount("/static", StaticFiles(directory=static_path), name="static")
     except Exception:
         pass
-
-
-# Startup event to initialize database
-@app.on_event("startup")
-async def startup_event():
-    try:
-        from app.database import init_db
-        print("🚀 Starting database initialization...")
-        init_db()
-        print("✅ Database initialized successfully")
-    except Exception as e:
-        print(f"⚠️ Database initialization error: {e}")
-        import traceback
-        traceback.print_exc()
-
 
 # Import routers
 from app.routes import auth_routes, admin_routes, authority_routes, parent_routes
@@ -67,4 +49,5 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run("app.main:app", host="0.0.0.0", port=8000, reload=True)

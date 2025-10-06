@@ -20,9 +20,9 @@ import enum
 
 
 class UserRole(enum.Enum):
-    ADMIN = "admin"
-    AUTHORITY = "authority"
-    PARENT = "parent"
+    ADMIN = "ADMIN"
+    AUTHORITY = "AUTHORITY"
+    PARENT = "PARENT"
 
 
 class Gender(enum.Enum):
@@ -44,14 +44,17 @@ class NutritionStatus(enum.Enum):
 
 class User(Base):
     __tablename__ = "users"
+
     id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(50), unique=True, index=True, nullable=False)
-    password = Column(String(100), nullable=False)
+    username = Column(String, unique=True, index=True, nullable=False)
+    password = Column(String, nullable=False)
     role = Column(Enum(UserRole), nullable=False)
-    created_at = Column(DateTime, default=func.now())
-    is_active = Column(Boolean, default=True)
-    classrooms = relationship("Classroom", back_populates="authority")
-    kids = relationship("Kid", back_populates="parent")
+
+    # Relationships
+    kids = relationship("Kid", back_populates="parent", foreign_keys="Kid.parent_id")
+    classrooms = relationship(
+        "Classroom", back_populates="authority", foreign_keys="Classroom.authority_id"
+    )
 
 
 class Kid(Base):
