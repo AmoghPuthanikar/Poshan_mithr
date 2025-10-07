@@ -72,10 +72,10 @@ strong {
 
 /* ========== NAVBAR ========== */
 .navbar {
-    background: linear-gradient(90deg, rgba(20,20,20,0.85) 0%, rgba(80,80,80,0.85) 100%);
-    border-bottom: 3px solid rgba(30, 30, 30, 0.7);
+    background: linear-gradient(90deg, #ff6b35 0%, #66bb6a 100%);
+    border-bottom: 3px solid #047857;
     padding: 1rem 2rem;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+    box-shadow: 0 2px 16px rgba(255, 107, 53, 0.25);
     backdrop-filter: blur(12px) saturate(180%);
     -webkit-backdrop-filter: blur(12px) saturate(180%);
 }
