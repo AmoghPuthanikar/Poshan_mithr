@@ -411,10 +411,8 @@ strong {
 .form-select:focus {
     border-color: transparent;
     outline: none;
-    box-shadow: 0 0 0 2px var(--primary-orange);
-    background-image: var(--gradient-orange-green);
-    background-origin: border-box;
-    background-clip: padding-box, border-box;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.3);
+    border-image: var(--gradient-orange-green) 1;
 }
 
 .input-group-text {
@@ -1015,6 +1013,190 @@ strong {
     background-color: var(--border-light);
 }
 
+/* ========== MODAL DIALOGS ========== */
+.modal-content {
+    border-radius: 8px;
+    border: 1px solid var(--border-gray);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+    padding: var(--space-lg);
+    border-bottom: 1px solid var(--border-gray);
+    background: var(--gradient-orange-green);
+    color: white;
+}
+
+.modal-title {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
+}
+
+.modal-body {
+    padding: var(--space-lg);
+}
+
+.modal-footer {
+    padding: var(--space-md) var(--space-lg);
+    border-top: 1px solid var(--border-gray);
+    background-color: var(--bg-gray);
+}
+
+/* ========== BREADCRUMB - COMPACT ========== */
+.breadcrumb {
+    background-color: transparent;
+    padding: var(--space-sm) 0;
+    margin-bottom: var(--space-lg);
+    font-size: var(--font-size-sm);
+}
+
+.breadcrumb-item {
+    color: var(--text-light);
+}
+
+.breadcrumb-item.active {
+    color: var(--primary-orange);
+    font-weight: var(--font-weight-medium);
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--text-muted);
+    content: "›";
+    padding: 0 var(--space-sm);
+}
+
+/* ========== PAGINATION - GRADIENT HOVER ========== */
+.pagination {
+    display: flex;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-lg);
+}
+
+.page-item .page-link {
+    border: 1px solid var(--border-gray);
+    color: var(--text-dark);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 6px;
+    font-size: var(--font-size-sm);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.page-item .page-link::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-orange-green);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.page-item .page-link:hover::before,
+.page-item.active .page-link::before {
+    opacity: 1;
+}
+
+.page-item .page-link:hover,
+.page-item.active .page-link {
+    color: white;
+    border-color: transparent;
+}
+
+/* ========== TABS - COMPACT & MODERN ========== */
+.nav-tabs {
+    border-bottom: 2px solid var(--border-gray);
+    margin-bottom: var(--space-lg);
+}
+
+.nav-tabs .nav-link {
+    border: none;
+    color: var(--text-light);
+    padding: var(--space-sm) var(--space-lg);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.nav-tabs .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gradient-orange-green);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover::after,
+.nav-tabs .nav-link.active::after {
+    transform: scaleX(1);
+}
+
+.nav-tabs .nav-link.active {
+    color: var(--primary-orange);
+    font-weight: var(--font-weight-semibold);
+}
+
+/* ========== SPINNER/LOADER ========== */
+.spinner-border {
+    border: 3px solid rgba(249, 115, 22, 0.2);
+    border-top-color: var(--primary-orange);
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    animation: spinner-rotate 0.75s linear infinite;
+}
+
+@keyframes spinner-rotate {
+    to { transform: rotate(360deg); }
+}
+
+.spinner-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 2px;
+}
+
+/* ========== TOOLTIPS ========== */
+.tooltip {
+    font-size: var(--font-size-xs);
+    border-radius: 4px;
+}
+
+.tooltip-inner {
+    background-color: var(--text-dark);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: 4px;
+}
+
+/* ========== POPOVERS ========== */
+.popover {
+    border: 1px solid var(--border-gray);
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.popover-header {
+    background: var(--gradient-orange-green);
+    color: white;
+    font-weight: var(--font-weight-semibold);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 6px 6px 0 0;
+}
+
+.popover-body {
+    padding: var(--space-md);
+    font-size: var(--font-size-sm);
+}
+
 /* ========== RESPONSIVE - COMPACT ========== */
 @media (max-width: 768px) {
     :root {
@@ -1110,3 +1292,61 @@ strong {
     background-size: 200% 200%;
     animation: gradient-shift 3s ease infinite;
 }
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.4s ease;
+}
+
+/* ========== CUSTOM SCROLLBAR ========== */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-gray);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-orange);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-orange-dark);
+}
+
+/* ========== UTILITY CLASSES ========== */
+.text-center { text-align: center; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+
+.d-flex { display: flex; }
+.d-block { display: block; }
+.d-inline-block { display: inline-block; }
+.d-none { display: none; }
+
+.justify-content-center { justify-content: center; }
+.justify-content-between { justify-content: space-between; }
+.align-items-center { align-items: center; }
+
+.w-100 { width: 100%; }
+.h-100 { height: 100%; }
+
+.rounded { border-radius: 6px; }
+.rounded-circle { border-radius: 50%; }
+
+.shadow-sm { box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); }
+.shadow { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); }
+.shadow-lg { box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); }
