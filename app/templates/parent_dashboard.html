@@ -1,132 +1,481 @@
-{% extends "base.html" %} {% block title %}Parent Dashboard{% endblock %} {%
-block content %}
-<div class="container-fluid">
-  <div class="row mb-4">
-    <div class="col-12">
-      {% if error %}
-      <div class="alert alert-warning">⚠️ {{ error }}</div>
-      {% else %}
-      <h2>💖 {{ kid.name }}'s Health Dashboard</h2>
-      <p class="text-muted">Monitor your child's nutrition and growth</p>
-      {% endif %}
+{% extends "base.html" %} 
+{% block title %}Parent Dashboard - Poshan Mithr{% endblock %} 
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary-orange: #ff6b35;
+    --primary-green: #66bb6a;
+    --dark: #1a1a1a;
+    --gray: #666;
+    --light-gray: #fafafa;
+    --border: rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    color: var(--dark);
+    letter-spacing: -0.2px;
+  }
+
+  .dashboard-header {
+    padding: 2rem 0 3rem;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dashboard-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    letter-spacing: -1.5px;
+  }
+
+  .dashboard-header .subtitle {
+    font-size: 1.1rem;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Stat Cards */
+  .stat-card {
+    background: white;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .stat-card:nth-child(2) { animation-delay: 0.2s; }
+  .stat-card:nth-child(3) { animation-delay: 0.3s; }
+  .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    border-color: var(--primary-orange);
+  }
+
+  .stat-icon {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 1rem;
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.3rem;
+    letter-spacing: -1px;
+  }
+
+  .stat-label {
+    font-size: 0.9rem;
+    color: var(--gray);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Main Cards */
+  .info-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out 0.5s backwards;
+  }
+
+  .info-card:hover {
+    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+  }
+
+  .card-header-custom {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    border: none;
+  }
+
+  .card-header-custom h5 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .card-header-custom small {
+    opacity: 0.9;
+    font-size: 0.85rem;
+    display: block;
+    margin-top: 0.3rem;
+  }
+
+  .card-body-custom {
+    padding: 2rem;
+  }
+
+  /* Metrics Grid */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .metric-box {
+    background: var(--light-gray);
+    padding: 1.5rem;
+    border-radius: 12px;
+    text-align: center;
+    border: 1px solid var(--border);
+    transition: all 0.3s ease;
+  }
+
+  .metric-box:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-orange);
+  }
+
+  .metric-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.5px;
+  }
+
+  .metric-label {
+    font-size: 0.85rem;
+    color: var(--gray);
+    font-weight: 500;
+  }
+
+  /* Recommendations */
+  .recommendation-box {
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .recommendation-box h6 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .recommendation-text {
+    color: var(--gray);
+    line-height: 1.7;
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+  }
+
+  /* Health Tips */
+  .tips-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .tips-list li {
+    padding: 0.8rem 0;
+    color: var(--gray);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tips-list li:last-child {
+    border-bottom: none;
+  }
+
+  .tips-list li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* Alert Styles */
+  .alert-custom {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .alert-custom h5 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .alert-custom p {
+    color: var(--gray);
+    margin: 0;
+  }
+
+  .alert-warning-custom {
+    background: #fff3e0;
+    border-color: #ffb74d;
+    color: #e65100;
+  }
+
+  /* Status Badge */
+  .status-badge {
+    display: inline-block;
+    padding: 0.4rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .status-healthy {
+    background: #e8f5e9;
+    color: #2e7d32;
+  }
+
+  .status-warning {
+    background: #fff3e0;
+    color: #e65100;
+  }
+
+  .status-pending {
+    background: #f5f5f5;
+    color: var(--gray);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dashboard-header h2 {
+      font-size: 2rem;
+    }
+
+    .stat-card {
+      margin-bottom: 1rem;
+    }
+
+    .metrics-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+  <!-- Header -->
+  <div class="dashboard-header">
+    {% if error %}
+    <div class="alert alert-warning-custom">
+      <i class="fas fa-exclamation-triangle"></i> {{ error }}
     </div>
+    {% else %}
+    <h2>
+      <span class="gradient-text">{{ kid.name }}'s</span> Health Dashboard
+    </h2>
+    <p class="subtitle">Monitor your child's nutrition and growth journey</p>
+    {% endif %}
   </div>
 
   {% if kid and not error %}
+  <!-- Stats Cards -->
   <div class="row mb-4">
     <div class="col-lg-3 col-md-6 mb-3">
-      <div class="card bg-primary text-white">
-        <div class="card-body text-center">
-          <h3>{{ age_years }}.{{ age_months }}</h3>
-          <p class="mb-0">🎂 Age</p>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-birthday-cake"></i>
         </div>
+        <div class="stat-value">{{ age_years }}.{{ age_months }}</div>
+        <div class="stat-label">Age (Years)</div>
       </div>
     </div>
 
     <div class="col-lg-3 col-md-6 mb-3">
-      <div class="card bg-info text-white">
-        <div class="card-body text-center">
-          <h3>{{ kid.gender.value.title() }}</h3>
-          <p class="mb-0">⚥ Gender</p>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-{{ 'mars' if kid.gender.value == 'male' else 'venus' }}"></i>
         </div>
+        <div class="stat-value">{{ kid.gender.value.title() }}</div>
+        <div class="stat-label">Gender</div>
       </div>
     </div>
 
     <div class="col-lg-3 col-md-6 mb-3">
-      <div class="card bg-success text-white">
-        <div class="card-body text-center">
-          <h3>{{ kid.veg_preference.value.replace('_', '-').title() }}</h3>
-          <p class="mb-0">🥗 Diet</p>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-leaf"></i>
         </div>
+        <div class="stat-value">{{ kid.veg_preference.value.replace('_', '-').title() }}</div>
+        <div class="stat-label">Diet Preference</div>
       </div>
     </div>
 
     <div class="col-lg-3 col-md-6 mb-3">
-      <div
-        class="card bg-{% if latest_report %}{% if latest_report.status.value == 'healthy' %}success{% else %}warning{% endif %}{% else %}secondary{% endif %} text-white"
-      >
-        <div class="card-body text-center">
-          <h3>
-            {% if latest_report %}{{ latest_report.status.value.title() }}{%
-            else %}Pending{% endif %}
-          </h3>
-          <p class="mb-0">💚 Status</p>
+      <div class="stat-card">
+        <div class="stat-icon">
+          <i class="fas fa-heart-pulse"></i>
         </div>
+        <div class="stat-value">
+          {% if latest_report %}
+          <span class="status-badge status-{% if latest_report.status.value == 'healthy' %}healthy{% else %}warning{% endif %}">
+            {{ latest_report.status.value.title() }}
+          </span>
+          {% else %}
+          <span class="status-badge status-pending">Pending</span>
+          {% endif %}
+        </div>
+        <div class="stat-label">Health Status</div>
       </div>
     </div>
   </div>
 
   {% if latest_report %}
   <div class="row">
+    <!-- Main Assessment Card -->
     <div class="col-md-8 mb-4">
-      <div class="card">
-        <div class="card-header bg-primary text-white">
-          <h5>📊 Latest Assessment</h5>
-          <small>{{ latest_report.report_date.strftime('%B %d, %Y') }}</small>
+      <div class="info-card">
+        <div class="card-header-custom">
+          <h5>
+            <i class="fas fa-chart-line"></i>
+            Latest Health Assessment
+          </h5>
+          <small>Recorded on {{ latest_report.report_date.strftime('%B %d, %Y') }}</small>
         </div>
-        <div class="card-body">
-          <div class="row text-center mb-3">
-            <div class="col-md-4">
-              <div class="p-3 border rounded">
-                <h3>{{ latest_report.bmi }}</h3>
-                <small>BMI</small>
-              </div>
+        <div class="card-body-custom">
+          <!-- Metrics Grid -->
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <div class="metric-value">{{ latest_report.bmi }}</div>
+              <div class="metric-label">BMI Index</div>
             </div>
-            <div class="col-md-4">
-              <div class="p-3 border rounded">
-                <h3>{{ latest_report.status.value.title() }}</h3>
-                <small>Status</small>
+            <div class="metric-box">
+              <div class="metric-value">
+                <span class="status-badge status-{% if latest_report.status.value == 'healthy' %}healthy{% else %}warning{% endif %}">
+                  {{ latest_report.status.value.title() }}
+                </span>
               </div>
+              <div class="metric-label">Status</div>
             </div>
-            <div class="col-md-4">
-              <div class="p-3 border rounded">
-                <h3>{{ latest_report.bmi_percentile }}%</h3>
-                <small>Percentile</small>
-              </div>
+            <div class="metric-box">
+              <div class="metric-value">{{ latest_report.bmi_percentile }}%</div>
+              <div class="metric-label">Percentile</div>
             </div>
           </div>
 
           {% if latest_report.recommendation %}
-          <hr />
-          <h6>🍽️ Diet Recommendations:</h6>
-          <div class="alert alert-light">
-            <pre
-              style="
-                white-space: pre-wrap;
-                font-family: inherit;
-                font-size: 0.9em;
-              "
-            >
-{{ latest_report.recommendation[:300] }}...</pre
-            >
+          <div class="recommendation-box">
+            <h6>
+              <i class="fas fa-utensils"></i>
+              Personalized Diet Recommendations
+            </h6>
+            <div class="recommendation-text">{{ latest_report.recommendation[:300] }}...</div>
           </div>
           {% endif %}
         </div>
       </div>
     </div>
 
+    <!-- Health Tips Card -->
     <div class="col-md-4 mb-4">
-      <div class="card">
-        <div class="card-header bg-success text-white">
-          <h5>💡 Health Tips</h5>
+      <div class="info-card">
+        <div class="card-header-custom">
+          <h5>
+            <i class="fas fa-lightbulb"></i>
+            Daily Health Tips
+          </h5>
         </div>
-        <div class="card-body">
-          <ul class="small">
-            <li>Regular meal times</li>
-            <li>8-10 glasses water daily</li>
-            <li>Variety in diet</li>
-            <li>Physical activity</li>
-            <li>Adequate sleep</li>
+        <div class="card-body-custom">
+          <ul class="tips-list">
+            <li>Maintain regular meal times</li>
+            <li>Ensure 8-10 glasses of water daily</li>
+            <li>Include variety in diet</li>
+            <li>Encourage physical activity</li>
+            <li>Adequate sleep is essential</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
   {% else %}
-  <div class="alert alert-info text-center">
-    <h5>📋 No Assessment Yet</h5>
-    <p>Health assessment will appear once measurements are taken by school.</p>
+  <!-- No Assessment Alert -->
+  <div class="alert-custom">
+    <h5>
+      <i class="fas fa-clipboard-list"></i>
+      No Health Assessment Available
+    </h5>
+    <p>Your child's health assessment will appear here once measurements are recorded by the school.</p>
   </div>
-  {% endif %} {% endif %}
+  {% endif %}
+  {% endif %}
 </div>
 {% endblock %}
