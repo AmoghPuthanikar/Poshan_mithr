@@ -1,193 +1,665 @@
-{% extends "base.html" %} {% block title %}Admin Dashboard - Nutrition
-Management{% endblock %} {% block content %}
-<div class="container-fluid">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h2>📊 District CEO Dashboard</h2>
-      <p class="text-muted">Overview of nutrition status across all schools</p>
-    </div>
+{% extends "base.html" %} 
+{% block title %}District CEO Dashboard - Poshan Mithr{% endblock %} 
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary-orange: #ff6b35;
+    --primary-green: #66bb6a;
+    --dark: #1a1a1a;
+    --gray: #666;
+    --light-gray: #fafafa;
+    --border: rgba(0,0,0,0.06);
+    --warning: #ffb74d;
+    --danger: #ef5350;
+    --info: #42a5f5;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    color: var(--dark);
+    letter-spacing: -0.2px;
+  }
+
+  /* Dashboard Header */
+  .dashboard-header {
+    padding: 2rem 0 3rem;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .dashboard-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 0.5rem;
+    letter-spacing: -1.5px;
+  }
+
+  .dashboard-header .subtitle {
+    font-size: 1.1rem;
+    color: var(--gray);
+    font-weight: 400;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Stats Cards */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    padding: 2rem;
+    transition: all 0.4s ease;
+    opacity: 0;
+    animation: fadeInUp 0.6s ease-out forwards;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card:nth-child(1) { animation-delay: 0.1s; }
+  .stat-card:nth-child(2) { animation-delay: 0.2s; }
+  .stat-card:nth-child(3) { animation-delay: 0.3s; }
+  .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+  }
+
+  .stat-card.card-primary::before {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+  }
+
+  .stat-card.card-success::before {
+    background: linear-gradient(135deg, var(--primary-green) 0%, #43a047 100%);
+  }
+
+  .stat-card.card-warning::before {
+    background: linear-gradient(135deg, var(--warning) 0%, #ffa726 100%);
+  }
+
+  .stat-card.card-info::before {
+    background: linear-gradient(135deg, var(--info) 0%, #1e88e5 100%);
+  }
+
+  .stat-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+    border-color: var(--primary-orange);
+  }
+
+  .stat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .stat-icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .stat-card.card-primary .stat-icon {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+  }
+
+  .stat-card.card-success .stat-icon {
+    background: linear-gradient(135deg, var(--primary-green) 0%, #43a047 100%);
+  }
+
+  .stat-card.card-warning .stat-icon {
+    background: linear-gradient(135deg, var(--warning) 0%, #ffa726 100%);
+  }
+
+  .stat-card.card-info .stat-icon {
+    background: linear-gradient(135deg, var(--info) 0%, #1e88e5 100%);
+  }
+
+  .stat-details h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0 0 0.3rem 0;
+    letter-spacing: -1.5px;
+  }
+
+  .stat-details p {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Main Content Cards */
+  .info-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out 0.5s backwards;
+    margin-bottom: 2rem;
+  }
+
+  .info-card:hover {
+    box-shadow: 0 20px 50px rgba(0,0,0,0.08);
+  }
+
+  .card-header-custom {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    border: none;
+  }
+
+  .card-header-custom h5 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .card-body-custom {
+    padding: 2rem;
+  }
+
+  /* Progress Bars */
+  .progress-item {
+    margin-bottom: 2rem;
+  }
+
+  .progress-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.8rem;
+  }
+
+  .progress-label {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--dark);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .progress-value {
+    font-size: 0.9rem;
+    color: var(--gray);
+    font-weight: 500;
+  }
+
+  .custom-progress {
+    height: 12px;
+    background: var(--light-gray);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .custom-progress-bar {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1s ease-out;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .custom-progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: linear-gradient(90deg, 
+      transparent, 
+      rgba(255,255,255,0.3), 
+      transparent
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .progress-warning {
+    background: linear-gradient(135deg, var(--warning) 0%, #ffa726 100%);
+  }
+
+  .progress-success {
+    background: linear-gradient(135deg, var(--primary-green) 0%, #43a047 100%);
+  }
+
+  .progress-info {
+    background: linear-gradient(135deg, var(--info) 0%, #1e88e5 100%);
+  }
+
+  .progress-danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #e53935 100%);
+  }
+
+  /* Overview Table */
+  .overview-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .overview-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.2s ease;
+  }
+
+  .overview-table tbody tr:hover {
+    background: var(--light-gray);
+  }
+
+  .overview-table td {
+    padding: 1rem;
+    color: var(--gray);
+  }
+
+  .overview-table td:first-child {
+    font-weight: 600;
+    color: var(--dark);
+  }
+
+  .overview-table td:last-child {
+    text-align: right;
+  }
+
+  /* Status Badge */
+  .status-badge {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: linear-gradient(135deg, var(--primary-green) 0%, #43a047 100%);
+    color: white;
+  }
+
+  /* Features List */
+  .features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .features-list li {
+    padding: 1rem 0;
+    color: var(--gray);
+    font-size: 0.95rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.6;
+  }
+
+  .features-list li:last-child {
+    border-bottom: none;
+  }
+
+  .features-list li::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 0.5rem;
+  }
+
+  /* Alert Box */
+  .alert-custom {
+    background: linear-gradient(135deg, rgba(66, 165, 245, 0.1) 0%, rgba(33, 150, 243, 0.1) 100%);
+    border: 1px solid rgba(66, 165, 245, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .alert-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--info) 0%, #1e88e5 100%);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  .alert-content strong {
+    display: block;
+    color: var(--dark);
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+  }
+
+  .alert-content p {
+    color: var(--gray);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dashboard-header h2 {
+      font-size: 2rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .stat-card-content {
+      gap: 1rem;
+    }
+
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      font-size: 1.5rem;
+    }
+
+    .stat-details h2 {
+      font-size: 2rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4">
+  <!-- Header -->
+  <div class="dashboard-header">
+    <h2>
+      <span class="gradient-text">District CEO</span> Dashboard
+    </h2>
+    <p class="subtitle">Comprehensive overview of nutrition status across all schools and anganwadis</p>
   </div>
 
   <!-- Statistics Cards -->
-  <div class="row mb-4">
-    <div class="col-md-3 col-sm-6 mb-3">
-      <div class="card bg-primary text-white h-100">
-        <div class="card-body text-center">
-          <h2 class="mb-0">{{ total_kids }}</h2>
-          <p class="mb-0">👶 Total Children</p>
+  <div class="stats-grid">
+    <div class="stat-card card-primary">
+      <div class="stat-card-content">
+        <div class="stat-icon">
+          <i class="fas fa-users"></i>
+        </div>
+        <div class="stat-details">
+          <h2>{{ total_kids }}</h2>
+          <p>Total Children</p>
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 mb-3">
-      <div class="card bg-success text-white h-100">
-        <div class="card-body text-center">
-          <h2 class="mb-0">{{ total_schools }}</h2>
-          <p class="mb-0">🏫 Schools</p>
+    <div class="stat-card card-success">
+      <div class="stat-card-content">
+        <div class="stat-icon">
+          <i class="fas fa-school"></i>
+        </div>
+        <div class="stat-details">
+          <h2>{{ total_schools }}</h2>
+          <p>Active Schools</p>
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 mb-3">
-      <div class="card bg-warning text-white h-100">
-        <div class="card-body text-center">
-          <h2 class="mb-0">{{ nutrition_stats.get('underweight', 0) }}</h2>
-          <p class="mb-0">⚠️ Underweight</p>
+    <div class="stat-card card-warning">
+      <div class="stat-card-content">
+        <div class="stat-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="stat-details">
+          <h2>{{ nutrition_stats.get('underweight', 0) }}</h2>
+          <p>Underweight</p>
         </div>
       </div>
     </div>
 
-    <div class="col-md-3 col-sm-6 mb-3">
-      <div class="card bg-info text-white h-100">
-        <div class="card-body text-center">
-          <h2 class="mb-0">{{ nutrition_stats.get('healthy', 0) }}</h2>
-          <p class="mb-0">💚 Healthy</p>
+    <div class="stat-card card-info">
+      <div class="stat-card-content">
+        <div class="stat-icon">
+          <i class="fas fa-heart-pulse"></i>
+        </div>
+        <div class="stat-details">
+          <h2>{{ nutrition_stats.get('healthy', 0) }}</h2>
+          <p>Healthy Children</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Nutrition Status Distribution -->
+  <!-- Main Content Row -->
   <div class="row">
-    <div class="col-12">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="mb-0">📈 Nutrition Status Distribution</h5>
+    <!-- Nutrition Distribution Card -->
+    <div class="col-lg-8 mb-4">
+      <div class="info-card">
+        <div class="card-header-custom">
+          <h5>
+            <i class="fas fa-chart-bar"></i>
+            Nutrition Status Distribution
+          </h5>
         </div>
-        <div class="card-body">
+        <div class="card-body-custom">
           {% if total_kids > 0 %}
 
           <!-- Underweight -->
-          {% set underweight_count = nutrition_stats.get('underweight', 0) %} {%
-          set underweight_percent = ((underweight_count / total_kids) * 100) |
-          round %}
-          <div class="mb-3">
-            <div class="d-flex justify-content-between mb-1">
-              <strong>Underweight</strong>
-              <span
-                >{{ underweight_count }} students ({{ ((underweight_count /
-                total_kids) * 100) | round(1) }}%)</span
-              >
+          {% set underweight_count = nutrition_stats.get('underweight', 0) %}
+          {% set underweight_percent = ((underweight_count / total_kids) * 100) | round(1) %}
+          <div class="progress-item">
+            <div class="progress-header">
+              <div class="progress-label">
+                <i class="fas fa-circle" style="color: var(--warning); font-size: 0.6rem;"></i>
+                Underweight
+              </div>
+              <div class="progress-value">
+                {{ underweight_count }} students ({{ underweight_percent }}%)
+              </div>
             </div>
-            <div class="progress">
-              <div class="progress-bar bg-warning"></div>
+            <div class="custom-progress">
+              <div class="custom-progress-bar progress-warning" style="width: {{ underweight_percent }}%"></div>
             </div>
           </div>
 
           <!-- Healthy -->
-          {% set healthy_count = nutrition_stats.get('healthy', 0) %} {% set
-          healthy_percent = ((healthy_count / total_kids) * 100) | round %}
-          <div class="mb-3">
-            <div class="d-flex justify-content-between mb-1">
-              <strong>Healthy</strong>
-              <span
-                >{{ healthy_count }} students ({{ ((healthy_count / total_kids)
-                * 100) | round(1) }}%)</span
-              >
+          {% set healthy_count = nutrition_stats.get('healthy', 0) %}
+          {% set healthy_percent = ((healthy_count / total_kids) * 100) | round(1) %}
+          <div class="progress-item">
+            <div class="progress-header">
+              <div class="progress-label">
+                <i class="fas fa-circle" style="color: var(--primary-green); font-size: 0.6rem;"></i>
+                Healthy
+              </div>
+              <div class="progress-value">
+                {{ healthy_count }} students ({{ healthy_percent }}%)
+              </div>
             </div>
-            <div class="progress">
-              <div class="progress-bar bg-success"></div>
+            <div class="custom-progress">
+              <div class="custom-progress-bar progress-success" style="width: {{ healthy_percent }}%"></div>
             </div>
           </div>
 
           <!-- Overweight -->
-          {% set overweight_count = nutrition_stats.get('overweight', 0) %} {%
-          set overweight_percent = ((overweight_count / total_kids) * 100) |
-          round %}
-          <div class="mb-3">
-            <div class="d-flex justify-content-between mb-1">
-              <strong>Overweight</strong>
-              <span
-                >{{ overweight_count }} students ({{ ((overweight_count /
-                total_kids) * 100) | round(1) }}%)</span
-              >
+          {% set overweight_count = nutrition_stats.get('overweight', 0) %}
+          {% set overweight_percent = ((overweight_count / total_kids) * 100) | round(1) %}
+          <div class="progress-item">
+            <div class="progress-header">
+              <div class="progress-label">
+                <i class="fas fa-circle" style="color: var(--info); font-size: 0.6rem;"></i>
+                Overweight
+              </div>
+              <div class="progress-value">
+                {{ overweight_count }} students ({{ overweight_percent }}%)
+              </div>
             </div>
-            <div class="progress">
-              <div class="progress-bar bg-info"></div>
+            <div class="custom-progress">
+              <div class="custom-progress-bar progress-info" style="width: {{ overweight_percent }}%"></div>
             </div>
           </div>
 
           <!-- Obese -->
-          {% set obese_count = nutrition_stats.get('obese', 0) %} {% set
-          obese_percent = ((obese_count / total_kids) * 100) | round %}
-          <div class="mb-3">
-            <div class="d-flex justify-content-between mb-1">
-              <strong>Obese</strong>
-              <span
-                >{{ obese_count }} students ({{ ((obese_count / total_kids) *
-                100) | round(1) }}%)</span
-              >
+          {% set obese_count = nutrition_stats.get('obese', 0) %}
+          {% set obese_percent = ((obese_count / total_kids) * 100) | round(1) %}
+          <div class="progress-item">
+            <div class="progress-header">
+              <div class="progress-label">
+                <i class="fas fa-circle" style="color: var(--danger); font-size: 0.6rem;"></i>
+                Obese
+              </div>
+              <div class="progress-value">
+                {{ obese_count }} students ({{ obese_percent }}%)
+              </div>
             </div>
-            <div class="progress">
-              <div class="progress-bar bg-danger"></div>
+            <div class="custom-progress">
+              <div class="custom-progress-bar progress-danger" style="width: {{ obese_percent }}%"></div>
             </div>
           </div>
 
           {% else %}
-          <div class="alert alert-info">
-            <strong>ℹ️ No Data Yet</strong>
-            <p class="mb-0">
-              No students enrolled yet. Data will appear once students are added
-              and assessed.
-            </p>
+          <div class="alert-custom">
+            <div class="alert-icon">
+              <i class="fas fa-info-circle"></i>
+            </div>
+            <div class="alert-content">
+              <strong>No Data Available</strong>
+              <p>No students enrolled yet. Data will appear once students are added and health assessments are completed.</p>
+            </div>
           </div>
           {% endif %}
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Additional Info Cards -->
-  <div class="row mt-4">
-    <div class="col-md-6 mb-3">
-      <div class="card border-primary">
-        <div class="card-header bg-primary text-white">
-          <h5 class="mb-0">📌 District Overview</h5>
+    <!-- Sidebar Cards -->
+    <div class="col-lg-4">
+      <!-- District Overview -->
+      <div class="info-card mb-4">
+        <div class="card-header-custom">
+          <h5>
+            <i class="fas fa-map-marker-alt"></i>
+            District Overview
+          </h5>
         </div>
-        <div class="card-body">
-          <table class="table table-sm mb-0">
+        <div class="card-body-custom">
+          <table class="overview-table">
             <tbody>
               <tr>
-                <td><strong>Total Schools:</strong></td>
+                <td>Total Schools</td>
                 <td>{{ total_schools }}</td>
               </tr>
               <tr>
-                <td><strong>Total Students:</strong></td>
+                <td>Total Students</td>
                 <td>{{ total_kids }}</td>
               </tr>
               <tr>
-                <td><strong>Avg Students/School:</strong></td>
+                <td>Avg Students/School</td>
                 <td>
-                  {{ (total_kids / total_schools) | round(1) if total_schools >
-                  0 else 0 }}
+                  {{ (total_kids / total_schools) | round(1) if total_schools > 0 else 0 }}
                 </td>
               </tr>
               <tr>
-                <td><strong>System Status:</strong></td>
-                <td><span class="badge bg-success">Active</span></td>
+                <td>System Status</td>
+                <td>
+                  <span class="status-badge">Active</span>
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-6 mb-3">
-      <div class="card border-success">
-        <div class="card-header bg-success text-white">
-          <h5 class="mb-0">ℹ️ Admin Features</h5>
+      <!-- Admin Features -->
+      <div class="info-card">
+        <div class="card-header-custom">
+          <h5>
+            <i class="fas fa-tools"></i>
+            Admin Features
+          </h5>
         </div>
-        <div class="card-body">
-          <ul class="mb-0">
-            <li>Monitor district-wide health metrics</li>
-            <li>Track nutrition trends across schools</li>
-            <li>Identify schools needing intervention</li>
-            <li>View comprehensive health reports</li>
-            <li>Generate district analytics</li>
+        <div class="card-body-custom">
+          <ul class="features-list">
+            <li>Monitor district-wide health metrics in real-time</li>
+            <li>Track nutrition trends across all schools</li>
+            <li>Identify institutions needing immediate intervention</li>
+            <li>View comprehensive health reports and analytics</li>
+            <li>Generate district-level statistical insights</li>
           </ul>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script>
+  // Animate progress bars on load
+  document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.custom-progress-bar');
+    progressBars.forEach(bar => {
+      const width = bar.style.width;
+      bar.style.width = '0';
+      setTimeout(() => {
+        bar.style.width = width;
+      }, 100);
+    });
+  });
+</script>
 {% endblock %}
