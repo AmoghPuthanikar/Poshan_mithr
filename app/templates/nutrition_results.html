@@ -1,121 +1,611 @@
-{% extends "base.html" %} {% block title %}Nutrition Results{% endblock %} {%
-block content %}
-<div class="container-fluid">
-  <div class="row mb-4">
-    <div class="col-12">
-      <h2>📊 Nutrition Assessment Results</h2>
-    </div>
-  </div>
+{% extends "base.html" %} 
+{% block title %}Nutrition Assessment Results - Poshan Mithr{% endblock %} 
 
-  <div class="row">
-    <div class="col-md-4 mb-4">
-      <div class="card border-primary">
-        <div class="card-header bg-primary text-white">
-          <h5>👶 Student Info</h5>
-        </div>
-        <div class="card-body">
-          <h6><strong>{{ kid.name }}</strong></h6>
-          <hr />
-          <p class="mb-1">
-            🎂 Age: {{ age_years }} years, {{ age_months }} months
-          </p>
-          <p class="mb-1">⚥ Gender: {{ kid.gender.value.title() }}</p>
-          <p class="mb-1">
-            🥗 Diet: {{ kid.veg_preference.value.replace('_', '-').title() }}
-          </p>
-          <p class="mb-0">
-            🏛️ Class: {{ kid.classroom.name if kid.classroom else 'N/A' }}
-          </p>
-        </div>
-      </div>
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  :root {
+    --primary-orange: #ff6b35;
+    --primary-green: #66bb6a;
+    --dark: #1a1a1a;
+    --gray: #666;
+    --light-gray: #fafafa;
+    --border: rgba(0,0,0,0.06);
+    --info: #42a5f5;
+    --warning: #ffb74d;
+    --danger: #ef5350;
+    --success: #66bb6a;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: linear-gradient(180deg, #fafafa 0%, #ffffff 100%);
+    color: var(--dark);
+    letter-spacing: -0.2px;
+  }
+
+  .page-container {
+    padding: 3rem 0;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Page Header */
+  .page-header {
+    margin-bottom: 3rem;
+    animation: fadeInUp 0.6s ease-out;
+  }
+
+  .page-header h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin: 0;
+    letter-spacing: -1.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .gradient-text {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Info Cards */
+  .info-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease-out forwards;
+    height: 100%;
+  }
+
+  .info-card:nth-child(1) { animation-delay: 0.1s; }
+  .info-card:nth-child(2) { animation-delay: 0.2s; }
+
+  .info-card:hover {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+
+  .card-header-custom {
+    padding: 1.5rem 2rem;
+    border: none;
+    color: white;
+  }
+
+  .card-header-primary {
+    background: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-green) 100%);
+  }
+
+  .card-header-success {
+    background: linear-gradient(135deg, var(--success) 0%, #43a047 100%);
+  }
+
+  .card-header-warning {
+    background: linear-gradient(135deg, var(--warning) 0%, #ffa726 100%);
+  }
+
+  .card-header-danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #e53935 100%);
+  }
+
+  .card-header-custom h5 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .card-body-custom {
+    padding: 2rem;
+  }
+
+  /* Student Info */
+  .student-info h6 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 1.2rem;
+    letter-spacing: -0.5px;
+  }
+
+  .info-divider {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 1.2rem 0;
+  }
+
+  .info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 0;
+    color: var(--gray);
+    font-size: 0.95rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .info-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--light-gray);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-orange);
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .info-label {
+    color: var(--dark);
+    font-weight: 600;
+  }
+
+  /* Results Grid */
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .result-box {
+    background: var(--light-gray);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.8rem 1.2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .result-box:hover {
+    transform: translateY(-5px);
+    border-color: var(--primary-orange);
+  }
+
+  .result-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1px;
+  }
+
+  .result-value.status {
+    font-size: 1.4rem;
+  }
+
+  .result-value-primary { color: var(--primary-orange); }
+  .result-value-success { color: var(--success); }
+  .result-value-warning { color: var(--warning); }
+  .result-value-danger { color: var(--danger); }
+  .result-value-info { color: var(--info); }
+
+  .result-label {
+    font-size: 0.85rem;
+    color: var(--gray);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  /* Status Badge */
+  .status-badge {
+    display: inline-block;
+    padding: 0.5rem 1.2rem;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-success {
+    background: linear-gradient(135deg, var(--success) 0%, #43a047 100%);
+    color: white;
+  }
+
+  .badge-warning {
+    background: linear-gradient(135deg, var(--warning) 0%, #ffa726 100%);
+    color: white;
+  }
+
+  .badge-danger {
+    background: linear-gradient(135deg, var(--danger) 0%, #e53935 100%);
+    color: white;
+  }
+
+  /* Deficiencies List */
+  .deficiency-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .deficiency-item {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    transition: all 0.2s ease;
+  }
+
+  .deficiency-item:last-child {
+    margin-bottom: 0;
+  }
+
+  .deficiency-item:hover {
+    border-color: var(--warning);
+    transform: translateX(5px);
+  }
+
+  .deficiency-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--warning) 0%, #ffa726 100%);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    flex-shrink: 0;
+  }
+
+  .deficiency-text {
+    color: var(--dark);
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  /* No Deficiencies Alert */
+  .success-alert {
+    background: linear-gradient(135deg, rgba(102, 187, 106, 0.1) 0%, rgba(67, 160, 71, 0.1) 100%);
+    border: 1px solid rgba(102, 187, 106, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .success-icon {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, var(--success) 0%, #43a047 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .success-message {
+    color: #2e7d32;
+    font-weight: 600;
+    font-size: 1rem;
+  }
+
+  /* Diet Plan */
+  .diet-plan-container {
+    max-height: 400px;
+    overflow-y: auto;
+    background: var(--light-gray);
+    border-radius: 10px;
+    padding: 1.5rem;
+  }
+
+  .diet-plan-container::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .diet-plan-container::-webkit-scrollbar-track {
+    background: #e0e0e0;
+    border-radius: 10px;
+  }
+
+  .diet-plan-container::-webkit-scrollbar-thumb {
+    background: var(--primary-orange);
+    border-radius: 10px;
+  }
+
+  .diet-plan-text {
+    white-space: pre-wrap;
+    font-family: 'Inter', sans-serif;
+    color: var(--gray);
+    line-height: 1.8;
+    font-size: 0.95rem;
+  }
+
+  /* Action Buttons */
+  .action-section {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    text-align: center;
+  }
+
+  .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-custom {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    letter-spacing: -0.2px;
+  }
+
+  .btn-warning-custom {
+    background: linear-gradient(135deg, var(--warning) 0%, #ffa726 100%);
+    color: white;
+    box-shadow: 0 5px 20px rgba(255, 183, 77, 0.3);
+  }
+
+  .btn-warning-custom:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(255, 183, 77, 0.4);
+    color: white;
+  }
+
+  .btn-secondary-custom {
+    background: white;
+    color: var(--gray);
+    border: 2px solid var(--border);
+  }
+
+  .btn-secondary-custom:hover {
+    border-color: var(--primary-orange);
+    color: var(--dark);
+    transform: translateY(-2px);
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .page-container {
+      padding: 2rem 0;
+    }
+
+    .page-header h2 {
+      font-size: 2rem;
+    }
+
+    .results-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .result-box {
+      padding: 1.2rem 0.8rem;
+    }
+
+    .result-value {
+      font-size: 1.8rem;
+    }
+
+    .action-buttons {
+      flex-direction: column;
+    }
+
+    .btn-custom {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container">
+  <div class="container-fluid px-4">
+    <!-- Page Header -->
+    <div class="page-header">
+      <h2>
+        <i class="fas fa-chart-line"></i>
+        <span class="gradient-text">Nutrition Assessment</span> Results
+      </h2>
     </div>
 
-    <div class="col-md-8 mb-4">
-      <div
-        class="card border-{% if status == 'Healthy' %}success{% elif status == 'Underweight' %}warning{% else %}danger{% endif %}"
-      >
-        <div
-          class="card-header bg-{% if status == 'Healthy' %}success{% elif status == 'Underweight' %}warning{% else %}danger{% endif %} text-white"
-        >
-          <h5>📊 Results</h5>
-        </div>
-        <div class="card-body">
-          <div class="row text-center">
-            <div class="col-md-3">
-              <div class="p-3 border rounded">
-                <h3 class="text-primary">{{ bmi }}</h3>
-                <small>BMI</small>
+    <!-- Main Content Row -->
+    <div class="row">
+      <!-- Student Info Card -->
+      <div class="col-lg-4 mb-4">
+        <div class="info-card">
+          <div class="card-header-custom card-header-primary">
+            <h5>
+              <i class="fas fa-user"></i>
+              Student Information
+            </h5>
+          </div>
+          <div class="card-body-custom student-info">
+            <h6>{{ kid.name }}</h6>
+            <hr class="info-divider" />
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-birthday-cake"></i>
+              </div>
+              <div>
+                <span class="info-label">Age:</span>
+                {{ age_years }} years, {{ age_months }} months
               </div>
             </div>
-            <div class="col-md-3">
-              <div class="p-3 border rounded">
-                <h3
-                  class="text-{% if status == 'Healthy' %}success{% else %}warning{% endif %}"
-                >
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-{{ 'mars' if kid.gender.value == 'male' else 'venus' }}"></i>
+              </div>
+              <div>
+                <span class="info-label">Gender:</span>
+                {{ kid.gender.value.title() }}
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-leaf"></i>
+              </div>
+              <div>
+                <span class="info-label">Diet:</span>
+                {{ kid.veg_preference.value.replace('_', '-').title() }}
+              </div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">
+                <i class="fas fa-door-open"></i>
+              </div>
+              <div>
+                <span class="info-label">Class:</span>
+                {{ kid.classroom.name if kid.classroom else 'N/A' }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Results Card -->
+      <div class="col-lg-8 mb-4">
+        <div class="info-card">
+          <div class="card-header-custom card-header-{% if status == 'Healthy' %}success{% elif status == 'Underweight' %}warning{% else %}danger{% endif %}">
+            <h5>
+              <i class="fas fa-chart-pie"></i>
+              Assessment Results
+            </h5>
+          </div>
+          <div class="card-body-custom">
+            <div class="results-grid">
+              <div class="result-box">
+                <div class="result-value result-value-primary">{{ bmi }}</div>
+                <div class="result-label">BMI Index</div>
+              </div>
+              <div class="result-box">
+                <div class="result-value status result-value-{% if status == 'Healthy' %}success{% elif status == 'Underweight' %}warning{% else %}danger{% endif %}">
                   {{ status }}
-                </h3>
-                <small>Status</small>
+                </div>
+                <div class="result-label">Status</div>
               </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 border rounded">
-                <h3 class="text-info">{{ percentile }}%</h3>
-                <small>Percentile</small>
+              <div class="result-box">
+                <div class="result-value result-value-info">{{ percentile }}%</div>
+                <div class="result-label">Percentile</div>
               </div>
-            </div>
-            <div class="col-md-3">
-              <div class="p-3 border rounded">
-                <h3>{{ deficiencies|length }}</h3>
-                <small>Risk Factors</small>
+              <div class="result-box">
+                <div class="result-value result-value-warning">{{ deficiencies|length }}</div>
+                <div class="result-label">Risk Factors</div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="row">
-    <div class="col-md-6 mb-4">
-      <div class="card border-warning">
-        <div class="card-header bg-warning text-dark">
-          <h5>⚠️ Deficiencies</h5>
-        </div>
-        <div class="card-body">
-          {% if deficiencies %}
-          <ul class="list-group">
-            {% for deficiency in deficiencies %}
-            <li class="list-group-item">{{ deficiency }}</li>
-            {% endfor %}
-          </ul>
-          {% else %}
-          <div class="alert alert-success">✅ No deficiencies identified</div>
-          {% endif %}
+    <!-- Deficiencies and Diet Plan Row -->
+    <div class="row">
+      <!-- Deficiencies Card -->
+      <div class="col-lg-6 mb-4">
+        <div class="info-card">
+          <div class="card-header-custom card-header-warning">
+            <h5>
+              <i class="fas fa-exclamation-triangle"></i>
+              Identified Deficiencies
+            </h5>
+          </div>
+          <div class="card-body-custom">
+            {% if deficiencies %}
+            <ul class="deficiency-list">
+              {% for deficiency in deficiencies %}
+              <li class="deficiency-item">
+                <div class="deficiency-icon">
+                  <i class="fas fa-triangle-exclamation"></i>
+                </div>
+                <div class="deficiency-text">{{ deficiency }}</div>
+              </li>
+              {% endfor %}
+            </ul>
+            {% else %}
+            <div class="success-alert">
+              <div class="success-icon">
+                <i class="fas fa-check"></i>
+              </div>
+              <div class="success-message">
+                No deficiencies identified - Great health status!
+              </div>
+            </div>
+            {% endif %}
+          </div>
         </div>
       </div>
-    </div>
 
-    <div class="col-md-6 mb-4">
-      <div class="card border-success">
-        <div class="card-header bg-success text-white">
-          <h5>🍽️ Diet Plan</h5>
-        </div>
-        <div class="card-body">
-          <div style="max-height: 300px; overflow-y: auto">
-            <pre style="white-space: pre-wrap; font-family: inherit">
-{{ recommendation }}</pre
-            >
+      <!-- Diet Plan Card -->
+      <div class="col-lg-6 mb-4">
+        <div class="info-card">
+          <div class="card-header-custom card-header-success">
+            <h5>
+              <i class="fas fa-utensils"></i>
+              Personalized Diet Plan
+            </h5>
+          </div>
+          <div class="card-body-custom">
+            <div class="diet-plan-container">
+              <div class="diet-plan-text">{{ recommendation }}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="text-center mt-3">
-    <a href="/authority/nutrition-calculator" class="btn btn-warning me-2"
-      >🧮 Calculate Again</a
-    >
-    <a href="/authority/dashboard" class="btn btn-secondary">🏠 Dashboard</a>
+    <!-- Action Buttons -->
+    <div class="action-section">
+      <div class="action-buttons">
+        <a href="/authority/nutrition-calculator" class="btn-custom btn-warning-custom">
+          <i class="fas fa-calculator"></i>
+          Calculate Again
+        </a>
+        <a href="/authority/dashboard" class="btn-custom btn-secondary-custom">
+          <i class="fas fa-home"></i>
+          Back to Dashboard
+        </a>
+      </div>
+    </div>
   </div>
 </div>
 {% endblock %}
