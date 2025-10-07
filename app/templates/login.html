@@ -1,105 +1,74 @@
-{% extends "base.html" %}
-{% block title %}Login - Poshan Mithr{% endblock %}
-{% block content %}
-<div class="login-container">
-    <div class="login-card">
-        <div class="login-header">
-            <div class="logo-section">
-                <div class="logo-icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/>
-                    </svg>
-                </div>
-                <h1>Poshan Mithr</h1>
-            </div>
-            <p>Smart School Nutrition Management</p>
+{% extends "base.html" %} {% block title %}Login - Nutrition Management System{%
+endblock %} {% block content %}
+<div
+  class="row justify-content-center"
+  style="min-height: 80vh; align-items: center; display: flex"
+>
+  <div class="col-md-6 col-lg-4">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white text-center py-4">
+        <h3>Poshan Mithr</h3>
+        <p class="mb-0">Built for Atmanirbhar Bharat </p>
+      </div>
+      <div class="card-body p-4">
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+          <strong>❌ Error:</strong> {{ error }}
         </div>
+        {% endif %}
 
-        <div class="login-body">
-            {% if error %}
-            <div class="alert">
-                <div class="alert-icon">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                        <path d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8-3.58-8-8-8zm1 13H7v-2h2v2zm0-3H7V4h2v6z"/>
-                    </svg>
-                </div>
-                <div>
-                    <strong>Authentication Failed:</strong> {{ error }}
-                </div>
+        <form method="post" action="/login">
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <div class="input-group">
+              <span class="input-group-text">👤</span>
+              <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                placeholder="Enter username"
+                required
+                autofocus
+              />
             </div>
-            {% endif %}
+          </div>
 
-            <form method="post" action="/login">
-                <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
-                            </svg>
-                        </span>
-                        <input
-                            type="text"
-                            class="form-control"
-                            id="username"
-                            name="username"
-                            placeholder="Enter username"
-                            required
-                            autofocus
-                        />
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <div class="input-wrapper">
-                        <span class="input-icon">
-                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
-                            </svg>
-                        </span>
-                        <input
-                            type="password"
-                            class="form-control"
-                            id="password"
-                            name="password"
-                            placeholder="Enter password"
-                            required
-                        />
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-login">
-                    Sign In
-                </button>
-            </form>
-        </div>
-
-        <div class="login-footer">
-            <div class="credentials-title">Demo Credentials</div>
-            <div class="credential-list">
-                <div class="credential-item">
-                    <span class="badge badge-admin">Admin</span>
-                    <span class="credential-text">admin / admin123</span>
-                </div>
-                <div class="credential-item">
-                    <span class="badge badge-authority">Authority</span>
-                    <span class="credential-text">head1 / pass123</span>
-                </div>
-                <div class="credential-item">
-                    <span class="badge badge-parent">Parent</span>
-                    <span class="credential-text">user1 / pass123</span>
-                </div>
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <div class="input-group">
+              <span class="input-group-text">🔒</span>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                name="password"
+                placeholder="Enter password"
+                required
+              />
             </div>
-        </div>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+              🔐 Login to Dashboard
+            </button>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer bg-light text-center py-3">
+        <small class="text-muted">
+          <strong>Demo Credentials:</strong><br />
+          <span class="badge bg-primary">Admin</span> admin / admin123<br />
+          <span class="badge bg-success">Headmaster</span> head1 / pass123<br />
+          <span class="badge bg-info">Parent</span> user1 / pass123
+        </small>
+      </div>
     </div>
 
-    <div class="copyright">
-        © 2025 Poshan Mithr. All rights reserved.
+    <div class="text-center mt-3 text-muted">
+      <small>© 2025 Nutrition Management System - Powered by FastAPI</small>
     </div>
+  </div>
 </div>
-
-<style>
-    /* (Paste all the CSS from Code 2 here) */
-</style>
 {% endblock %}
