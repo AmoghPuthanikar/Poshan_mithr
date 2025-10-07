@@ -3,18 +3,37 @@
 
 /* ========== CSS RESET & BASE ========== */
 :root {
-    --primary-blue: #2563eb;
-    --primary-dark: #1e40af;
-    --accent-green: #059669;
-    --accent-dark: #047857;
-    --text-dark: #1f2937;
-    --text-light: #6b7280;
-    --text-muted: #9ca3af;
-    --bg-gray: #f9fafb;
+    /* === Primary Brand Colors === */
+    --primary-orange: #ff6b35;   /* main brand orange */
+    --primary-orange-dark: #ff5722; /* deeper shade for hover/gradients */
+    --accent-green: #66bb6a;     /* soft accent green */
+    --accent-green-dark: #4caf50; /* darker green tone */
+
+    /* === Neutral Palette === */
+    --text-dark: #1a1a1a;        /* main text */
+    --text-medium: #4a4a4a;      /* navbar/text content */
+    --text-light: #666;          /* subtitles / muted text */
+    --text-muted: #9ca3af;       /* placeholder / secondary text */
+
+    /* === Backgrounds === */
     --bg-white: #ffffff;
-    --border-gray: #e5e7eb;
-    --border-light: #f3f4f6;
+    --bg-light: #fafafa;         /* section backgrounds */
+    --bg-gray: #f5f5f5;          /* light neutral background */
+    --bg-dark: #1a1a1a;          /* footer / dark section */
+
+    /* === Borders === */
+    --border-light: rgba(0, 0, 0, 0.05);
+    --border-gray: rgba(0, 0, 0, 0.08);
+
+    /* === Shadows === */
+    --shadow-orange: 0 10px 40px rgba(255, 107, 53, 0.25);
+    --shadow-orange-hover: 0 15px 50px rgba(255, 107, 53, 0.35);
+
+    /* === Gradients === */
+    --gradient-primary: linear-gradient(135deg, var(--primary-orange) 0%, var(--primary-orange-dark) 100%);
+    --gradient-accent: linear-gradient(135deg, var(--primary-orange) 0%, var(--accent-green) 100%);
 }
+
 
 * {
     margin: 0;
