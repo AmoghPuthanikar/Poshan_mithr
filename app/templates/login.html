@@ -37,26 +37,21 @@ block content %}
     margin-bottom: 0.5rem;
   }
 
-  .logo-icon {
-  width: 52px;
-  height: 52px;
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 10px;
+  .logo-container {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  height: 100px; /* or whatever the parent height is */
 }
 
-.logo-icon img {
-  max-width: 70%;
-  max-height: 70%;
+.logo-icon {
+  width: 62px;
+  height: 62px;
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
   object-fit: contain;
 }
-  .logo-icon svg {
-    width: 24px;
-    height: 24px;
-    fill: white;
-  }
+  
 
   .login-header h1 {
     font-size: 1.6rem;
@@ -280,9 +275,9 @@ block content %}
     <div class="login-card">
       <div class="login-header">
         <div class="logo-section">
-          <div class="logo-icon">
-            <img src="/static/images/logo.png" alt="Logo" style="height: 69px; margin-right: 10px;">
-          </div>
+         <div class="logo-container">
+  <img src="/static/images/logout-icon.png" alt="Logout Icon" class="logo-icon" />
+</div>
           <h1>Poshan Mithr</h1>
         </div>
         <p>Smart School Nutrition Management</p>
