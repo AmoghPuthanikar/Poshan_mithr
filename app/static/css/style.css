@@ -18,6 +18,9 @@
     --gradient-orange-green: linear-gradient(135deg, #f97316 0%, #059669 100%);
     --gradient-hover: linear-gradient(135deg, #fb923c 0%, #10b981 100%);
     
+    /* Navbar Gradient - Smooth Orange to Yellow */
+    --navbar-gradient: linear-gradient(90deg, #f97316 0%, #fbbf24 100%);
+    
     /* Standard System Colors (Keep default) */
     --success-color: #10b981;         /* Success messages */
     --error-color: #ef4444;           /* Error messages */
@@ -138,29 +141,18 @@ strong {
     margin: 0 auto;
 }
 
-/* ========== NAVBAR - ORANGE THEME ========== */
+/* ========== NAVBAR - UPDATED: NO HOVER EFFECTS + SMOOTH GRADIENT ========== */
 .navbar {
-    background: var(--gradient-orange-green);
+    background: var(--navbar-gradient);
     padding: var(--space-md) var(--space-lg);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     position: relative;
-    overflow: hidden;
+    z-index: 1050; /* Increased to ensure navbar stays above content */
 }
 
+/* REMOVED: Navbar hover gradient animation */
 .navbar::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: var(--gradient-hover);
-    transition: left 0.5s ease;
-    z-index: 0;
-}
-
-.navbar:hover::before {
-    left: 0;
+    display: none;
 }
 
 .navbar > * {
@@ -174,11 +166,11 @@ strong {
     color: var(--bg-white) !important;
     letter-spacing: -0.02em;
     padding: 0;
-    transition: transform 0.3s ease;
+    /* REMOVED: hover transform animation */
 }
 
 .navbar-brand:hover {
-    transform: scale(1.05);
+    /* No hover effect */
 }
 
 .navbar-dark .navbar-nav .nav-link {
@@ -188,30 +180,50 @@ strong {
     font-size: var(--font-size-sm);
     letter-spacing: -0.01em;
     border-radius: 6px;
-    transition: all 0.3s ease;
+    /* REMOVED: all hover transitions */
     position: relative;
-    overflow: hidden;
 }
 
+/* REMOVED: Navbar link hover effect */
 .navbar-dark .navbar-nav .nav-link::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    transition: left 0.3s ease;
-    z-index: -1;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover::before {
-    left: 0;
+    display: none;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
-    color: var(--bg-white);
-    transform: translateY(-1px);
+    /* No hover effect - stays same color */
+    color: rgba(255, 255, 255, 0.95);
+}
+
+/* ========== DROPDOWN FIX - HIGH Z-INDEX FOR VISIBILITY ========== */
+.navbar .dropdown-menu {
+    z-index: 1060 !important; /* Higher than navbar to appear above all elements */
+    position: absolute !important;
+    background-color: var(--bg-white);
+    border: 1px solid var(--border-gray);
+    border-radius: 6px;
+    padding: var(--space-sm);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 0.125rem;
+}
+
+/* Ensure dropdown parent has proper positioning context */
+.navbar .dropdown,
+.navbar .nav-item.dropdown {
+    position: relative;
+}
+
+/* Navbar dropdown toggle - no hover effects */
+.navbar .dropdown-toggle {
+    color: rgba(255, 255, 255, 0.95) !important;
+}
+
+.navbar .dropdown-toggle:hover {
+    color: rgba(255, 255, 255, 0.95) !important;
+    /* No transform or transition */
+}
+
+.navbar .dropdown-toggle::after {
+    margin-left: 0.5em;
 }
 
 /* ========== CARDS - COMPACT & SLIM ========== */
@@ -971,6 +983,8 @@ strong {
     border-radius: 6px;
     padding: var(--space-sm);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    z-index: 1060 !important; /* Ensure dropdowns appear above everything */
+    background-color: var(--bg-white);
 }
 
 .dropdown-item {
@@ -1169,6 +1183,7 @@ strong {
 .tooltip {
     font-size: var(--font-size-xs);
     border-radius: 4px;
+    z-index: 1070 !important;
 }
 
 .tooltip-inner {
@@ -1182,6 +1197,7 @@ strong {
     border: 1px solid var(--border-gray);
     border-radius: 6px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1070 !important;
 }
 
 .popover-header {
